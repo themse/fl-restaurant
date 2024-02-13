@@ -3,7 +3,7 @@ import 'package:restaurant/models/category.dart';
 
 class CategoryTile extends StatelessWidget {
   final Category category;
-  final Function({required String categoryId}) onTapCategory;
+  final Function() onTapCategory;
 
   const CategoryTile({
     super.key,
@@ -16,7 +16,7 @@ class CategoryTile extends StatelessWidget {
     return InkWell(
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(12),
-      onTap: () => onTapCategory(categoryId: category.id),
+      onTap: onTapCategory,
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),

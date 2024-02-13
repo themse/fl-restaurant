@@ -9,19 +9,16 @@ class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
 
   void _handleSelectCategory(
-      {required BuildContext context, required String categoryId}) {
-    final Category currentCategory =
-        categories.singleWhere((element) => element.id == categoryId);
-
-    final List<Meal> currentMeals = meals
-        .where((element) => element.categoryIds.contains(categoryId))
+      {required BuildContext context, required Category category}) {
+    final List<Meal> filteredMeals = meals
+        .where((element) => element.categoryIds.contains(category.id))
         .toList();
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            MealsScreen(title: currentCategory.title, meals: currentMeals),
+            MealsScreen(title: category.title, meals: filteredMeals),
       ),
     );
   }
@@ -43,10 +40,12 @@ class CategoriesScreen extends StatelessWidget {
             mainAxisSpacing: 20,
           ),
           itemBuilder: (context, index) {
+            final category = categories[index];
+
             return CategoryTile(
-              category: categories[index],
-              onTapCategory: ({required categoryId}) {
-                _handleSelectCategory(context: context, categoryId: categoryId);
+              category: category,
+              onTapCategory: () {
+                _handleSelectCategory(context: context, category: category);
               },
             );
           },
