@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 class MealDetailTile extends StatelessWidget {
   final String title;
-  final String value;
+  final Widget value;
 
   const MealDetailTile({super.key, required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -19,20 +20,20 @@ class MealDetailTile extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
           ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-          ),
+          const SizedBox(width: 5),
+          Expanded(flex: 2, child: value),
         ],
       ),
     );
