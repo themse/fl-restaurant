@@ -28,6 +28,19 @@ class Meal {
     required this.isVegetarian,
     required this.isLactoseFree,
   });
+
+  String get formattedDuration {
+    return '${duration.toString()} m';
+  }
+
+  String get formattedComplexity {
+    return complexity.name[0].toUpperCase() + complexity.name.substring(1);
+  }
+
+  String get formattedAffordability {
+    return affordability.name[0].toUpperCase() +
+        affordability.name.substring(1);
+  }
 }
 
 enum Complexity {

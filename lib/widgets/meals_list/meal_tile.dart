@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/models/meal.dart';
-import 'package:restaurant/widgets/meals_list/meal_detail_tile.dart';
+import 'package:restaurant/widgets/meals_list/meal_meta_tile.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealTile extends StatelessWidget {
@@ -32,8 +32,7 @@ class MealTile extends StatelessWidget {
               right: 0,
               child: Container(
                 color: Colors.black87,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
                     Text(
@@ -46,20 +45,23 @@ class MealTile extends StatelessWidget {
                           ),
                     ),
                     const SizedBox(height: 15),
-                    MealDetailTile(
-                      title: 'Duration',
-                      value: meal.duration.toString(),
-                    ),
-                    const SizedBox(height: 15),
-                    MealDetailTile(
-                      title: 'Complexity',
-                      value: meal.complexity.name.toUpperCase(),
-                    ),
-                    const SizedBox(height: 15),
-                    MealDetailTile(
-                      title: 'Affordability',
-                      value: meal.affordability.name.toUpperCase(),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        MealMetaTile(
+                          label: meal.formattedDuration,
+                          icon: Icons.schedule,
+                        ),
+                        MealMetaTile(
+                          label: meal.formattedComplexity,
+                          icon: Icons.work,
+                        ),
+                        MealMetaTile(
+                          label: meal.formattedAffordability,
+                          icon: Icons.attach_money,
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
