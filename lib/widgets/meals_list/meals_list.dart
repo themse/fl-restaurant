@@ -5,7 +5,7 @@ import 'package:restaurant/widgets/meals_list/meals_list_empty.dart';
 
 class MealsList extends StatelessWidget {
   final List<Meal> meals;
-  final Function({required String mealId}) onTap;
+  final Function({required Meal meal}) onTap;
 
   const MealsList({
     super.key,
@@ -22,11 +22,13 @@ class MealsList extends StatelessWidget {
     return ListView.builder(
       itemCount: meals.length,
       itemBuilder: (context, index) {
+        final Meal meal = meals[index];
+
         return Container(
           margin: const EdgeInsets.only(bottom: 30),
           child: MealTile(
-            meal: meals[index],
-            onTap: onTap,
+            meal: meal,
+            onTap: () => onTap(meal: meal),
           ),
         );
       },

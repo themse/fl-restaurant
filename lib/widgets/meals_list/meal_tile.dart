@@ -5,7 +5,7 @@ import 'package:transparent_image/transparent_image.dart';
 
 class MealTile extends StatelessWidget {
   final Meal meal;
-  final Function({required String mealId}) onTap;
+  final Function() onTap;
 
   const MealTile({super.key, required this.meal, required this.onTap});
 
@@ -16,7 +16,7 @@ class MealTile extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () => onTap(mealId: meal.id),
+        onTap: onTap,
         child: Stack(
           children: [
             FadeInImage(
