@@ -37,14 +37,35 @@ class MealDetailsScreen extends StatelessWidget {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: Text(meal.title)),
+      appBar: AppBar(
+        title: Text(meal.title),
+      ),
       body: Column(
         children: [
-          Image.network(
-            meal.imageUrl,
-            height: 200,
-            width: double.infinity,
-            fit: BoxFit.cover,
+          Stack(
+            children: [
+              Image.network(
+                meal.imageUrl,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Positioned(
+                bottom: 15,
+                right: 15,
+                child: ActionChip(
+                  onPressed: () {
+                    print('favorite');
+                  },
+                  avatar: const Icon(
+                    Icons.favorite,
+                    color: Colors.red,
+                  ),
+                  label: const Text('Add to favorite'),
+                  backgroundColor: Colors.white.withOpacity(0.8),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: SingleChildScrollView(
