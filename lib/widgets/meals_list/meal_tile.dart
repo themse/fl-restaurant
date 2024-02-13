@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/widgets/meals_list/meal_detail_tile.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MealTile extends StatelessWidget {
   final Meal meal;
@@ -10,31 +11,36 @@ class MealTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => onTap(mealId: meal.id),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            children: [
-              Image.network(
-                meal.imageUrl,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.hardEdge,
+      elevation: 2,
+      child: InkWell(
+        onTap: () => onTap(mealId: meal.id),
+        child: Stack(
+          children: [
+            FadeInImage(
+              height: 400,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              placeholder: MemoryImage(kTransparentImage),
+              image: NetworkImage(meal.imageUrl),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.black87,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   children: [
                     Text(
                       meal.title,
+                      maxLines: 2,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -57,8 +63,8 @@ class MealTile extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
