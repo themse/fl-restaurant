@@ -9,10 +9,12 @@ import 'package:restaurant/widgets/meals_list/meal_meta_tile.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   final Meal meal;
+  final void Function({required Meal meal}) onToggleFavorite;
 
   const MealDetailsScreen({
     super.key,
     required this.meal,
+    required this.onToggleFavorite,
   });
 
   void _handleSelectCategory(BuildContext context, Category category) {
@@ -23,7 +25,11 @@ class MealDetailsScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return MealsScreen(title: category.title, meals: targetMeals);
+          return MealsScreen(
+            title: category.title,
+            meals: targetMeals,
+            onToggleFavorite: onToggleFavorite,
+          );
         },
       ),
     );
@@ -55,7 +61,7 @@ class MealDetailsScreen extends StatelessWidget {
                 right: 15,
                 child: ActionChip(
                   onPressed: () {
-                    print('favorite');
+                    onToggleFavorite(meal: meal);
                   },
                   avatar: const Icon(
                     Icons.favorite,
