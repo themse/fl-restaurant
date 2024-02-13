@@ -46,109 +46,119 @@ class MealDetailsScreen extends StatelessWidget {
             width: double.infinity,
             fit: BoxFit.cover,
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MealMetaTile(
-                    label: meal.formattedDuration,
-                    icon: Icons.schedule,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      MealMetaTile(
+                        label: meal.formattedDuration,
+                        icon: Icons.schedule,
+                      ),
+                      MealMetaTile(
+                        label: meal.formattedComplexity,
+                        icon: Icons.work,
+                      ),
+                      MealMetaTile(
+                        label: meal.formattedAffordability,
+                        icon: Icons.attach_money,
+                      ),
+                    ],
                   ),
-                  MealMetaTile(
-                    label: meal.formattedComplexity,
-                    icon: Icons.work,
-                  ),
-                  MealMetaTile(
-                    label: meal.formattedAffordability,
-                    icon: Icons.attach_money,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              MealDetailTile(
-                title: 'Categories',
-                value: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: targetCategories
-                      .map(
-                        (category) => GestureDetector(
-                          onTap: () => _handleSelectCategory(context, category),
-                          child: Row(
-                            children: [
-                              Text(
-                                category.title,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                      color: category.color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                  const SizedBox(height: 20),
+                  MealDetailTile(
+                    title: 'Categories',
+                    value: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: targetCategories
+                          .map(
+                            (category) => GestureDetector(
+                              onTap: () =>
+                                  _handleSelectCategory(context, category),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    category.title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          color: category.color,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                ],
                               ),
-                              const SizedBox(width: 10),
-                            ],
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              MealDetailTile(
-                title: 'Ingredients',
-                value: Text(
-                  meal.ingredients.join(', '),
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                ),
-              ),
-              MealDetailTile(
-                title: 'Steps',
-                value: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (int i = 0; i < meal.steps.length; i++)
-                      Text(
-                        '${i + 1}. ${meal.steps[i]}',
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
                             ),
-                      ),
-                  ],
-                ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  MealDetailTile(
+                    title: 'Ingredients',
+                    value: Text(
+                      meal.ingredients.join(', '),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                  ),
+                  MealDetailTile(
+                    title: 'Steps',
+                    value: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < meal.steps.length; i++)
+                          Text(
+                            '${i + 1}. ${meal.steps[i]}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  MealDetailTile(
+                    title: 'Gluten Free',
+                    value: Container(
+                      alignment: Alignment.centerLeft,
+                      child: CheckMark(isChecked: meal.isGlutenFree),
+                    ),
+                  ),
+                  MealDetailTile(
+                    title: 'Vegan',
+                    value: Container(
+                      alignment: Alignment.centerLeft,
+                      child: CheckMark(isChecked: meal.isVegan),
+                    ),
+                  ),
+                  MealDetailTile(
+                    title: 'Vegetarian',
+                    value: Container(
+                      alignment: Alignment.centerLeft,
+                      child: CheckMark(isChecked: meal.isVegetarian),
+                    ),
+                  ),
+                  MealDetailTile(
+                    title: 'Lactose Free',
+                    value: Container(
+                      alignment: Alignment.centerLeft,
+                      child: CheckMark(isChecked: meal.isLactoseFree),
+                    ),
+                  ),
+                ]),
               ),
-              MealDetailTile(
-                title: 'Gluten Free',
-                value: Container(
-                  alignment: Alignment.centerLeft,
-                  child: CheckMark(isChecked: meal.isGlutenFree),
-                ),
-              ),
-              MealDetailTile(
-                title: 'Vegan',
-                value: Container(
-                  alignment: Alignment.centerLeft,
-                  child: CheckMark(isChecked: meal.isVegan),
-                ),
-              ),
-              MealDetailTile(
-                title: 'Vegetarian',
-                value: Container(
-                  alignment: Alignment.centerLeft,
-                  child: CheckMark(isChecked: meal.isVegetarian),
-                ),
-              ),
-              MealDetailTile(
-                title: 'Lactose Free',
-                value: Container(
-                  alignment: Alignment.centerLeft,
-                  child: CheckMark(isChecked: meal.isLactoseFree),
-                ),
-              ),
-            ]),
+            ),
           )
         ],
       ),
