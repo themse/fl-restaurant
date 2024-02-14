@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/screens/categories.dart';
+import 'package:restaurant/screens/filters.dart';
 import 'package:restaurant/screens/meals.dart';
+import 'package:restaurant/widgets/main_drawer.dart';
 
 typedef ScreenTitle = String;
 
@@ -65,6 +67,25 @@ class _TabsScreenState extends State<TabsScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
+  void _setScreen(String identifier) {
+    switch (identifier) {
+      case 'meals':
+        Navigator.of(context).pop();
+
+        break;
+      case 'filters':
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const FiltersScreen(),
+          ),
+        );
+        break;
+
+      default:
+        throw Error();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final MapEntry<ScreenTitle, Widget> screenConfig =
@@ -76,6 +97,7 @@ class _TabsScreenState extends State<TabsScreen> {
       appBar: AppBar(
         title: Text(title),
       ),
+      drawer: MainDrawer(onSelectScreen: _setScreen),
       body: screen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
