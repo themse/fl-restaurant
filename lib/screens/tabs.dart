@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/mock/dummy_data.dart';
 import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/screens/categories.dart';
 import 'package:restaurant/screens/filters.dart';
@@ -73,7 +74,9 @@ class _TabsScreenState extends State<TabsScreen> {
       case 'filters':
         final result = await Navigator.of(context).push<Map<FilterName, bool>>(
           MaterialPageRoute(
-            builder: (context) => const FiltersScreen(),
+            builder: (context) => FiltersScreen(
+              currentFilters: _selectedFilters,
+            ),
           ),
         );
 
@@ -94,11 +97,30 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Screens init
+    // apply filters
+    final filteredMeal = meals.where((meal) {
+      if (_selectedFilters[FilterName.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[FilterName.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      if (_selectedFilters[FilterName.vegetarian]! && !meal.isVegetarian) {
+        return false;
+      }
+      if (_selectedFilters[FilterName.lactoseFree]! && !meal.isLactoseFree) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    // init screens
     _screens = [
       TabConfig(
         title: 'Meals Categories',
         screen: CategoriesScreen(
+          availableMeals: filteredMeal,
           onToggleFavorite: _toggleMealFavoriteStatus,
         ),
       ),
@@ -110,7 +132,6 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
       ),
     ];
-
     final TabConfig activeTabConfig = _screens[_selectedPageIndex];
 
     return Scaffold(
