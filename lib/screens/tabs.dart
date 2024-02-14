@@ -7,6 +7,13 @@ import 'package:restaurant/widgets/main_drawer.dart';
 
 typedef ScreenTitle = String;
 
+class TabConfig {
+  final String title;
+  final Widget screen;
+
+  TabConfig({required this.title, required this.screen});
+}
+
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
 
@@ -16,9 +23,16 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
-  late List<Map<ScreenTitle, Widget>> _screens = [];
+  late List<TabConfig> _screens;
 
   final List<Meal> _favoriteMeals = [];
+
+  Map<FilterName, bool> _selectedFilters = {
+    FilterName.glutenFree: false,
+    FilterName.vegan: false,
+    FilterName.vegetarian: false,
+    FilterName.lactoseFree: false,
+  };
 
   void _selectPage(int index) {
     setState(() {
@@ -65,7 +79,11 @@ class _TabsScreenState extends State<TabsScreen> {
 
         if (!mounted) return;
 
-        print(result);
+        if (result != null) {
+          setState(() {
+            _selectedFilters = result;
+          });
+        }
 
         break;
 
@@ -78,31 +96,29 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     // Screens init
     _screens = [
-      {
-        'Meals Categories': CategoriesScreen(
+      TabConfig(
+        title: 'Meals Categories',
+        screen: CategoriesScreen(
           onToggleFavorite: _toggleMealFavoriteStatus,
-        )
-      },
-      {
-        'Favorites': MealsScreen(
+        ),
+      ),
+      TabConfig(
+        title: 'Favorites',
+        screen: MealsScreen(
           meals: _favoriteMeals,
           onToggleFavorite: _toggleMealFavoriteStatus,
-        )
-      },
+        ),
+      ),
     ];
 
-    // Destructure of data
-    final MapEntry<ScreenTitle, Widget> screenConfig =
-        _screens[_selectedPageIndex].entries.first;
-    final String title = screenConfig.key;
-    final Widget screen = screenConfig.value;
+    final TabConfig activeTabConfig = _screens[_selectedPageIndex];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(activeTabConfig.title),
       ),
       drawer: MainDrawer(onSelectScreen: _setScreen),
-      body: screen,
+      body: activeTabConfig.screen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         currentIndex: _selectedPageIndex,
