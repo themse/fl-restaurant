@@ -20,8 +20,63 @@ class _TabsScreenState extends State<TabsScreen> {
 
   final List<Meal> _favoriteMeals = [];
 
+  void _selectPage(int index) {
+    setState(() {
+      _selectedPageIndex = index;
+    });
+  }
+
+  void _toggleMealFavoriteStatus({required Meal meal}) {
+    final bool isExisting = _favoriteMeals.contains(meal);
+
+    setState(() {
+      if (isExisting) {
+        _favoriteMeals.remove(meal);
+        _showInfoMessage('Meal is no longer a favorite');
+      } else {
+        setState(() {
+          _favoriteMeals.add(meal);
+          _showInfoMessage('Marked as a favorite');
+        });
+      }
+    });
+  }
+
+  void _showInfoMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _setScreen(String identifier) async {
+    Navigator.of(context).pop();
+
+    switch (identifier) {
+      case 'meals':
+        // Logic
+        break;
+
+      case 'filters':
+        final result = await Navigator.of(context).push<Map<FilterName, bool>>(
+          MaterialPageRoute(
+            builder: (context) => const FiltersScreen(),
+          ),
+        );
+
+        if (!mounted) return;
+
+        print(result);
+
+        break;
+
+      default:
+        throw Exception('Invalid identifier: $identifier');
+    }
+  }
+
   @override
-  void initState() {
+  Widget build(BuildContext context) {
+    // Screens init
     _screens = [
       {
         'Meals Categories': CategoriesScreen(
@@ -36,58 +91,7 @@ class _TabsScreenState extends State<TabsScreen> {
       },
     ];
 
-    super.initState();
-  }
-
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
-
-  void _toggleMealFavoriteStatus({required Meal meal}) {
-    final isExisting = _favoriteMeals.contains(meal);
-
-    if (isExisting) {
-      setState(() {
-        _favoriteMeals.remove(meal);
-        _showInfoMessage('Meal is no longer a favorite');
-      });
-    } else {
-      setState(() {
-        _favoriteMeals.add(meal);
-        _showInfoMessage('Marked as a favorite');
-      });
-    }
-  }
-
-  void _showInfoMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void _setScreen(String identifier) {
-    switch (identifier) {
-      case 'meals':
-        Navigator.of(context).pop();
-
-        break;
-      case 'filters':
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const FiltersScreen(),
-          ),
-        );
-        break;
-
-      default:
-        throw Error();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    // Destructure of data
     final MapEntry<ScreenTitle, Widget> screenConfig =
         _screens[_selectedPageIndex].entries.first;
     final String title = screenConfig.key;
