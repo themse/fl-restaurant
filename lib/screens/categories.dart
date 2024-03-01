@@ -5,7 +5,7 @@ import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/screens/meals.dart';
 import 'package:restaurant/widgets/category_tile.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   final List<Meal> availableMeals;
 
   const CategoriesScreen({
@@ -13,9 +13,37 @@ class CategoriesScreen extends StatelessWidget {
     required this.availableMeals,
   });
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _handleSelectCategory(
       {required BuildContext context, required Category category}) {
-    final List<Meal> filteredMeals = availableMeals
+    final List<Meal> filteredMeals = widget.availableMeals
         .where((element) => element.categoryIds.contains(category.id))
         .toList();
 
@@ -32,9 +60,8 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
+    return AnimatedBuilder(
+        animation: _animationController,
         child: GridView.builder(
           itemCount: categories.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -54,7 +81,26 @@ class CategoriesScreen extends StatelessWidget {
             );
           },
         ),
-      ),
-    );
+        builder: (context, child) {
+          return Scaffold(
+            body: Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: SlideTransition(
+                position: Tween(
+                  begin: const Offset(0, 0.3),
+                  end: const Offset(0, 0),
+                ).animate(
+                  CurvedAnimation(
+                    parent: _animationController,
+                    curve: Curves.easeInOut,
+                  ),
+                ),
+                child: child,
+              ),
+            ),
+          );
+        });
   }
 }
