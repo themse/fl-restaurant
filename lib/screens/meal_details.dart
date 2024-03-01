@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:restaurant/mock/dummy_data.dart';
 import 'package:restaurant/models/category.dart';
 import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/screens/meals.dart';
+import 'package:restaurant/providers/favorites_provider.dart';
 import 'package:restaurant/widgets/check_mark.dart';
 import 'package:restaurant/widgets/meals_list/meal_detail_tile.dart';
 import 'package:restaurant/widgets/meals_list/meal_meta_tile.dart';
 
-class MealDetailsScreen extends StatelessWidget {
+class MealDetailsScreen extends ConsumerWidget {
   final Meal meal;
-  final void Function({required Meal meal}) onToggleFavorite;
 
   const MealDetailsScreen({
     super.key,
     required this.meal,
-    required this.onToggleFavorite,
   });
 
   void _handleSelectCategory(BuildContext context, Category category) {
@@ -28,19 +29,26 @@ class MealDetailsScreen extends StatelessWidget {
           return MealsScreen(
             title: category.title,
             meals: targetMeals,
-            onToggleFavorite: onToggleFavorite,
           );
         },
       ),
     );
   }
 
+  void _showInfoMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final List<Category> targetCategories =
         meal.categoryIds.map((String categoryId) {
       return categories.singleWhere((Category cat) => cat.id == categoryId);
     }).toList();
+
+    final isFavoriteMeal = ref.watch(favoritesProvider).contains(meal);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,13 +69,21 @@ class MealDetailsScreen extends StatelessWidget {
                 right: 15,
                 child: ActionChip(
                   onPressed: () {
-                    onToggleFavorite(meal: meal);
+                    final bool isMealAdded = ref
+                        .read(favoritesProvider.notifier)
+                        .toggleMealFavoriteStatus(meal: meal);
+
+                    final String message = isMealAdded
+                        ? 'Marked as a favorite'
+                        : 'Meal is no longer a favorite';
+
+                    _showInfoMessage(context, message);
                   },
-                  avatar: const Icon(
+                  avatar: Icon(
                     Icons.favorite,
-                    color: Colors.red,
+                    color: isFavoriteMeal ? Colors.red : Colors.blueGrey[300],
                   ),
-                  label: const Text('Add to favorite'),
+                  label: Text(isFavoriteMeal ? 'Remove' : 'Add'),
                   backgroundColor: Colors.white.withOpacity(0.8),
                 ),
               ),

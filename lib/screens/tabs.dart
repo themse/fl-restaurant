@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:restaurant/widgets/main_drawer.dart';
-import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/providers/meals_provider.dart';
+import 'package:restaurant/providers/favorites_provider.dart';
 import 'package:restaurant/screens/categories.dart';
 import 'package:restaurant/screens/filters.dart';
 import 'package:restaurant/screens/meals.dart';
@@ -28,8 +28,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedPageIndex = 0;
   late List<TabConfig> _screens;
 
-  final List<Meal> _favoriteMeals = [];
-
   Map<FilterName, bool> _selectedFilters = {
     FilterName.glutenFree: false,
     FilterName.vegan: false,
@@ -41,28 +39,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     setState(() {
       _selectedPageIndex = index;
     });
-  }
-
-  void _toggleMealFavoriteStatus({required Meal meal}) {
-    final bool isExisting = _favoriteMeals.contains(meal);
-
-    setState(() {
-      if (isExisting) {
-        _favoriteMeals.remove(meal);
-        _showInfoMessage('Meal is no longer a favorite');
-      } else {
-        setState(() {
-          _favoriteMeals.add(meal);
-          _showInfoMessage('Marked as a favorite');
-        });
-      }
-    });
-  }
-
-  void _showInfoMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _setScreen(String identifier) async {
@@ -99,6 +75,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final favoriteMeals = ref.watch(favoritesProvider);
     final meals = ref.watch(mealsProvider);
     // apply filters
     final filteredMeal = meals.where((meal) {
@@ -124,14 +101,12 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         title: 'Meals Categories',
         screen: CategoriesScreen(
           availableMeals: filteredMeal,
-          onToggleFavorite: _toggleMealFavoriteStatus,
         ),
       ),
       TabConfig(
         title: 'Favorites',
         screen: MealsScreen(
-          meals: _favoriteMeals,
-          onToggleFavorite: _toggleMealFavoriteStatus,
+          meals: favoriteMeals,
         ),
       ),
     ];
