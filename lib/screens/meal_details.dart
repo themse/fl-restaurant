@@ -7,6 +7,7 @@ import 'package:restaurant/models/meal.dart';
 import 'package:restaurant/screens/meals.dart';
 import 'package:restaurant/providers/favorites_provider.dart';
 import 'package:restaurant/widgets/check_mark.dart';
+import 'package:restaurant/widgets/like_button.dart';
 import 'package:restaurant/widgets/meals_list/meal_detail_tile.dart';
 import 'package:restaurant/widgets/meals_list/meal_meta_tile.dart';
 
@@ -67,7 +68,8 @@ class MealDetailsScreen extends ConsumerWidget {
               Positioned(
                 bottom: 15,
                 right: 15,
-                child: ActionChip(
+                child: LikeButton(
+                  isLiked: isFavoriteMeal,
                   onPressed: () {
                     final bool isMealAdded = ref
                         .read(favoritesProvider.notifier)
@@ -79,12 +81,6 @@ class MealDetailsScreen extends ConsumerWidget {
 
                     _showInfoMessage(context, message);
                   },
-                  avatar: Icon(
-                    Icons.favorite,
-                    color: isFavoriteMeal ? Colors.red : Colors.blueGrey[300],
-                  ),
-                  label: Text(isFavoriteMeal ? 'Remove' : 'Add'),
-                  backgroundColor: Colors.white.withOpacity(0.8),
                 ),
               ),
             ],
