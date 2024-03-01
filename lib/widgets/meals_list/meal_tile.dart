@@ -19,12 +19,15 @@ class MealTile extends StatelessWidget {
         onTap: onTap,
         child: Stack(
           children: [
-            FadeInImage(
-              height: 400,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                height: 400,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+              ),
             ),
             Positioned(
               bottom: 0,

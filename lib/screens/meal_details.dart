@@ -59,11 +59,14 @@ class MealDetailsScreen extends ConsumerWidget {
         children: [
           Stack(
             children: [
-              Image.network(
-                meal.imageUrl,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Hero(
+                tag: meal.id,
+                child: Image.network(
+                  meal.imageUrl,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
               Positioned(
                 bottom: 15,
