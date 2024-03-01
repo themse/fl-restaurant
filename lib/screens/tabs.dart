@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant/mock/dummy_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:restaurant/widgets/main_drawer.dart';
 import 'package:restaurant/models/meal.dart';
+import 'package:restaurant/providers/meals_provider.dart';
 import 'package:restaurant/screens/categories.dart';
 import 'package:restaurant/screens/filters.dart';
 import 'package:restaurant/screens/meals.dart';
-import 'package:restaurant/widgets/main_drawer.dart';
 
 typedef ScreenTitle = String;
 
@@ -15,14 +17,14 @@ class TabConfig {
   TabConfig({required this.title, required this.screen});
 }
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedPageIndex = 0;
   late List<TabConfig> _screens;
 
@@ -97,6 +99,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final meals = ref.watch(mealsProvider);
     // apply filters
     final filteredMeal = meals.where((meal) {
       if (_selectedFilters[FilterName.glutenFree]! && !meal.isGlutenFree) {
